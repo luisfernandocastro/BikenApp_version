@@ -1,3 +1,4 @@
+import 'package:biken/bloc/register/register_bloc.dart';
 import 'package:biken/ui/Routes/routes.dart';
 import 'package:biken/ui/Screens/homeUser.dart';
 import 'package:biken/ui/Screens/splash_screen.dart';
@@ -6,7 +7,6 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:hexcolor/hexcolor.dart';
 
 import 'bloc/login/login_bloc.dart';
 
@@ -25,6 +25,7 @@ class MyApp extends StatelessWidget {
     return MultiBlocProvider(
       providers: [
         BlocProvider(create: (_) => LoginBloc()),
+        BlocProvider(create: (_) => RegisterBloc()),
       ],
       child: new MaterialApp(
         routes: getApplicationRoutes(),

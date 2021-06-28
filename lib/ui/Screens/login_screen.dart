@@ -149,24 +149,8 @@ class _LoginState extends State<Login> {
   }
 
   void doLogin() {
-    final validEmail =
-        r'^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$';
-    RegExp regExp = RegExp(validEmail);
-    if (emailController.text.isEmpty) {
-      //
-      print('1,completa este campo');
-    } else if (!regExp.hasMatch(emailController.text)) {
-      //
-      print('2,correo inválido');
-    } else {
-      if (passwordController.text.length < 5) {
-        print('3,contraseña mayor a 6 caracteres');
-      } //
-      else {
-        _loginBloc.add(LoginSigninEvent(
-            email: emailController.text, password: passwordController.text));
-      }
-    }
+    _loginBloc.add(LoginSigninEvent(
+        email: emailController.text, password: passwordController.text));
   }
 
   void initializer() {
