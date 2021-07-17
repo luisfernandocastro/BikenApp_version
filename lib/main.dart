@@ -29,7 +29,7 @@ class MyApp extends StatelessWidget {
       ],
       child: new MaterialApp(
         routes: getApplicationRoutes(),
-        initialRoute: '/LoadingPage',
+        initialRoute: '/registerApi',
         debugShowCheckedModeBanner: false,
         theme: ThemeData(
           fontFamily: 'ABeeZee',

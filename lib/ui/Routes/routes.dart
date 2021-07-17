@@ -1,3 +1,4 @@
+import 'package:biken/recycling/register_delete.dart';
 import 'package:biken/ui/Screens/Ajustes.dart';
 import 'package:biken/ui/Screens/Alquilarbici.dart';
 import 'package:biken/ui/Screens/Condiciones.dart';
@@ -45,5 +46,6 @@ Map<String, WidgetBuilder> getApplicationRoutes() {
     '/ajustes': (context) => Ajustes(),
     '/condiciones': (context) => Condiciones(),
     '/LoadingPage': (context) => LoadingPage(),
+    '/registerApi': (context) => DeleteRegister(),
   };
 }

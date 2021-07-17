@@ -2,6 +2,7 @@ import 'package:biken/bloc/login/login_bloc.dart';
 import 'package:biken/ui/Screens/homeUser.dart';
 import 'package:biken/ui/components/textFooter.dart';
 import 'package:biken/ui/components/widgets/cajasTexto.dart';
+import 'package:biken/utils/responsive.dart';
 import 'package:flutter/material.dart';
 import 'package:biken/ui/components/widgets/botonPrincipal.dart';
 import 'package:biken/ui/components/contrasenaOlvidada.dart';
@@ -35,6 +36,7 @@ class _LoginState extends State<Login> {
 
   @override
   Widget build(BuildContext context) {
+    // final Responsive responsive = Responsive.of(context);
     Size size = MediaQuery.of(context).size;
     return BlocListener<LoginBloc, LoginState>(
       listener: (context, state) {

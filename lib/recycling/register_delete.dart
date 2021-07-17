@@ -1,3 +1,5 @@
+import 'package:biken/api/myApi.dart';
+import 'package:biken/bloc/register/register_bloc.dart';
 import 'package:biken/ui/components/widgets/cajasTexto.dart';
 import 'package:flutter/material.dart';
 import 'package:biken/ui/components/widgets/botonPrincipal.dart';
@@ -6,15 +8,27 @@ import 'package:biken/ui/styles/painter.dart';
 import 'package:biken/ui/components/sociales.dart';
 import 'package:biken/ui/components/textFooter.dart';
 
-class Registro extends StatefulWidget {
-  Registro({Key key}) : super(key: key);
+class DeleteRegister extends StatefulWidget {
+  DeleteRegister({Key key}) : super(key: key);
 
   @override
-  _RegistroState createState() => _RegistroState();
+  _DeleteRegisterState createState() => _DeleteRegisterState();
 }
 
-class _RegistroState extends State<Registro> {
+class _DeleteRegisterState extends State<DeleteRegister> {
+  TextEditingController emailController = TextEditingController();
+  TextEditingController passwordController = TextEditingController();
+  TextEditingController usernameController = TextEditingController();
+
   bool _showPassword = false;
+  @override
+  void initState() {
+    // initializer();
+    super.initState();
+  }
+
+  RegisterBloc _registerBloc;
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -40,15 +54,8 @@ class _RegistroState extends State<Registro> {
                             child: Column(
                               children: [
                                 TextBoxBiken(
-                                  placeholder: 'Nombre y Apellido',
-                                  tipoTexto: TextInputType.text,
-                                ),
-                                SizedBox(
-                                  height:
-                                      MediaQuery.of(context).size.width * 0.05,
-                                ),
-                                TextBoxBiken(
-                                  placeholder: 'Correo Electronico',
+                                  controller: usernameController,
+                                  placeholder: 'Nombre de Usuario',
                                   tipoTexto: TextInputType.emailAddress,
                                 ),
                                 SizedBox(
@@ -56,30 +63,21 @@ class _RegistroState extends State<Registro> {
                                       MediaQuery.of(context).size.width * 0.05,
                                 ),
                                 TextBoxBiken(
+                                  placeholder: 'Email',
+                                  controller: emailController,
+                                  tipoTexto: TextInputType.text,
+                                ),
+                                SizedBox(
+                                  height:
+                                      MediaQuery.of(context).size.width * 0.05,
+                                ),
+                                TextBoxBiken(
+                                  controller: passwordController,
+                                  icono: Icons.remove_red_eye,
                                   placeholder: 'Contraseña',
-                                  icono: Icons.remove_red_eye,
                                   verContrasena: verPassword(),
                                   verCaracteres: !this._showPassword,
                                   tipoTexto: TextInputType.text,
-                                ),
-                                SizedBox(
-                                  height:
-                                      MediaQuery.of(context).size.width * 0.05,
-                                ),
-                                TextBoxBiken(
-                                  placeholder: 'Repite tu contraseña',
-                                  icono: Icons.remove_red_eye,
-                                  verContrasena: verPassword(),
-                                  verCaracteres: !this._showPassword,
-                                  tipoTexto: TextInputType.text,
-                                ),
-                                SizedBox(
-                                  height:
-                                      MediaQuery.of(context).size.width * 0.05,
-                                ),
-                                TextBoxBiken(
-                                  placeholder: 'Número de Teléfono',
-                                  tipoTexto: TextInputType.phone,
                                 ),
                                 SizedBox(
                                   height:
@@ -88,7 +86,8 @@ class _RegistroState extends State<Registro> {
                                 Container(
                                   height: 50,
                                   child: BotonPrincipal(
-                                    textBoton: 'Continuar',
+                                    onPressed: doRegister,
+                                    textBoton: 'Registrarse',
                                     ruta: '/completionScreenRegister',
                                     tag: 'botonRegistro',
                                   ),
@@ -119,6 +118,14 @@ class _RegistroState extends State<Registro> {
     );
   }
 
+  void doRegister() {
+    MyApi myApi = MyApi();
+    myApi.register(
+        username: usernameController.text,
+        email: emailController.text,
+        password: passwordController.text);
+  }
+
   Widget verPassword() {
     return IconButton(
       icon: Icon(
@@ -129,5 +136,12 @@ class _RegistroState extends State<Registro> {
         setState(() => this._showPassword = !this._showPassword);
       },
     );
+  }
+
+  void _showError(BuildContext context, String message, Color color) {
+    ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+      content: Text(message),
+      backgroundColor: color,
+    ));
   }
 }
