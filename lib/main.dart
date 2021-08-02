@@ -8,6 +8,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
+import 'bloc/bike/bike_bloc.dart';
 import 'bloc/login/login_bloc.dart';
 
 void main() {
@@ -26,10 +27,11 @@ class MyApp extends StatelessWidget {
       providers: [
         BlocProvider(create: (_) => LoginBloc()),
         BlocProvider(create: (_) => RegisterBloc()),
+        BlocProvider(create: (_) => BikeBloc()),
       ],
       child: new MaterialApp(
         routes: getApplicationRoutes(),
-        initialRoute: '/registerApi',
+        initialRoute: '/LoadingPage',
         debugShowCheckedModeBanner: false,
         theme: ThemeData(
           fontFamily: 'ABeeZee',

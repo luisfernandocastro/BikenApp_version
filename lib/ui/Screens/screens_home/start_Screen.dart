@@ -1,5 +1,5 @@
 import 'package:biken/ui/components/banner_principal.dart';
-import 'package:biken/ui/components/gridViewTodos_principal.dart';
+import 'package:biken/ui/components/catalogoBike.dart';
 import 'package:biken/ui/components/itemsRecientes_principal.dart';
 import 'package:biken/ui/components/widgets/texto_divider.dart';
 import 'package:flutter/material.dart';
@@ -35,7 +35,7 @@ class _ScreenStartState extends State<ScreenStart> {
                       iconOne: Icons.filter_alt_outlined,
                       iconTwo: Icons.grid_view,
                     ),
-                    GridViewTodos(),
+                    CatalogoBike(),
                   ],
                 ),
               ),

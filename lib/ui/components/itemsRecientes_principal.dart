@@ -1,4 +1,7 @@
+import 'package:biken/bloc/bike/bike_bloc.dart';
+import 'package:biken/models/bicicletaModel.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:hexcolor/hexcolor.dart';
 
 class ItemsRecientes extends StatefulWidget {
@@ -9,23 +12,58 @@ class ItemsRecientes extends StatefulWidget {
 }
 
 class _ItemsRecientesState extends State<ItemsRecientes> {
+  BikeBloc _bikeBloc = BikeBloc();
+
+  void initState() {
+    _bikeBloc.add(ListBikeEvent());
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
     bool _activate = false;
     return Container(
+      margin: EdgeInsets.all(8.0),
+      child: BlocProvider(
+        create: (_) => _bikeBloc,
+        child: BlocListener<BikeBloc, BikeState>(
+          listener: (context, state) {
+            if (state is BikeFailureState) {
+              _showError(context, state.msg, Colors.red);
+            }
+          },
+          child: BlocBuilder<BikeBloc, BikeState>(
+            // ignore: missing_return
+            builder: (context, state) {
+              if (state is BikeInitial) {
+                return _createLoadingBike();
+              } else if (state is BikeLoadingState) {
+                return _createLoadingBike();
+              } else if (state is BikeSuccessState) {
+                return _bikeReciente(context, state.bicicletaModel);
+              } else if (state is BikeFailureState) {
+                return Container();
+              }
+            },
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget _bikeReciente(BuildContext context, List<BicicletaModel> model) {
+    Size size = MediaQuery.of(context).size;
+    return Container(
       height: size.height * 0.35,
       child: ListView.builder(
+        // shrinkWrap: true,
+        // physics: const NeverScrollableScrollPhysics(),
         scrollDirection: Axis.horizontal,
-        itemCount: _listaNumeros.length,
+        itemCount: model.length,
 
         //items de listview
         itemBuilder: (context, index) {
-          final imagen = _listaNumeros[index];
-          final texto = _listaTextoPrin[index];
-          final texto2 = _listaTextosec[index];
-          final precio = _listaPrecio[index];
-
           return InkWell(
             onTap: () {
               Navigator.of(context).pushNamed('/login');
@@ -50,52 +88,54 @@ class _ItemsRecientesState extends State<ItemsRecientes> {
                   child: Column(
                     children: [
                       Spacer(),
-                      Container(
-                        height: size.height * 0.20,
-                        child: Card(
-                          margin: EdgeInsets.all(5.0),
-                          shadowColor: Colors.grey[200],
-                          shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(15.0)),
-                          elevation: 15.0,
-                          child: Stack(
-                            children: [
-                              Center(
-                                child: ClipRRect(
+                      Card(
+                        // margin: EdgeInsets.all(5.0),
+                        shadowColor: Colors.grey[200],
+                        shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(15.0)),
+                        elevation: 15.0,
+                        child: Stack(
+                          children: [
+                            Center(
+                              child: ClipRRect(
                                   borderRadius: BorderRadius.circular(15.0),
-                                  child: FadeInImage(
-                                    image: NetworkImage(
-                                        'https://raw.githubusercontent.com/luisfernandocastro/API_Biken/gh-pages/images/bike$imagen.jpg'),
-                                    placeholder:
-                                        AssetImage('assets/images/loading.gif'),
+                                  child: Image(
+                                    fit: BoxFit.cover,
+                                    height: size.height * 0.18,
+                                    width: size.width,
+                                    image: NetworkImage('${model[index].foto}'),
+                                  )
+                                  //  FadeInImage(
+                                  //   image: NetworkImage('${model[index].foto}'),
+                                  //   placeholder:
+                                  //       AssetImage('assets/images/loading.gif'),
+                                  // ),
                                   ),
-                                ),
-                              ),
-                              Row(
-                                mainAxisAlignment: MainAxisAlignment.end,
-                                children: [
-                                  Padding(
-                                    padding: const EdgeInsets.symmetric(
-                                        horizontal: 8.0, vertical: 6.0),
-                                    child: InkWell(
-                                      onTap: () {
-                                        setState(() {
-                                          _activate = !_activate;
-                                        });
-                                      },
-                                      child: Icon(
-                                        Icons.favorite_border,
-                                        size: 17,
-                                        color: _activate == false
-                                            ? Colors.grey
-                                            : Colors.red,
-                                      ),
+                            ),
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.end,
+                              children: [
+                                Padding(
+                                  padding: const EdgeInsets.symmetric(
+                                      horizontal: 8.0, vertical: 6.0),
+                                  child: InkWell(
+                                    onTap: () {
+                                      // setState(() {
+                                      //   _activate = !_activate;
+                                      // });
+                                    },
+                                    child: Icon(
+                                      Icons.favorite_border,
+                                      size: 17,
+                                      //   color: _activate == false
+                                      //       ? Colors.grey
+                                      //       : Colors.red,
                                     ),
                                   ),
-                                ],
-                              ),
-                            ],
-                          ),
+                                ),
+                              ],
+                            ),
+                          ],
                         ),
                       ),
                       Spacer(),
@@ -105,16 +145,16 @@ class _ItemsRecientesState extends State<ItemsRecientes> {
                         child: Column(
                           children: [
                             Text(
-                              '$texto',
+                              'Bicicleta de ${model[index].categoria.nombre}',
                               style: TextStyle(
-                                  fontSize: size.height * 0.017,
+                                  fontSize: size.height * 0.016,
                                   fontWeight: FontWeight.bold),
                             ),
                             SizedBox(
                               height: 3.0,
                             ),
                             Text(
-                              '$texto2',
+                              '${model[index].material.nombre}',
                               style: TextStyle(fontSize: size.height * 0.017),
                             ),
                             SizedBox(
@@ -124,7 +164,7 @@ class _ItemsRecientesState extends State<ItemsRecientes> {
                               mainAxisAlignment: MainAxisAlignment.end,
                               children: [
                                 Text(
-                                  '$precio',
+                                  '${model[index].precioalquiler}',
                                   style: TextStyle(
                                     fontSize: size.height * 0.018,
                                     color: HexColor('#2059BD'),
@@ -147,35 +187,16 @@ class _ItemsRecientesState extends State<ItemsRecientes> {
     );
   }
 
-  List<int> _listaNumeros = [1, 2, 3, 4, 5, 6, 7];
+  Widget _createLoadingBike() {
+    return Center(
+      child: CircularProgressIndicator(),
+    );
+  }
 
-  List<String> _listaTextoPrin = [
-    'Bicicleta de Montaña',
-    'Bicicleta de Ruta',
-    'Bicicleta de Montaña',
-    'Bicicleta de carretera',
-    'Bicicleta de Ruta',
-    'Bicicleta de Montaña',
-    'Bicicleta de Montaña'
-  ];
-
-  List<String> _listaTextosec = [
-    '27.5" caspio',
-    '29" Todo terreno',
-    '26" Todo terreno',
-    '28" BMX',
-    '27" Adidas',
-    '26.4" Caspio',
-    '25" Todo Terreno'
-  ];
-
-  List<String> _listaPrecio = [
-    '\$' + '12.000',
-    '\$' + '13.000',
-    '\$' + '15.000',
-    '\$' + '22.000',
-    '\$' + '20.000',
-    '\$' + '18.000',
-    '\$' + '10.000',
-  ];
+  void _showError(BuildContext context, String message, Color color) {
+    ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+      content: Text(message),
+      backgroundColor: color,
+    ));
+  }
 }

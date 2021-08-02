@@ -28,6 +28,7 @@ class _DeleteRegisterState extends State<DeleteRegister> {
   }
 
   RegisterBloc _registerBloc;
+  MyApi myApi = MyApi();
 
   @override
   Widget build(BuildContext context) {
@@ -101,7 +102,8 @@ class _DeleteRegisterState extends State<DeleteRegister> {
                                   ruta: '/login',
                                   frase: '¿Ya eres miembro?',
                                   wordclave: 'Inicia Sesión',
-                                )
+                                ),
+                                example(),
                               ],
                             ),
                           ),
@@ -119,11 +121,11 @@ class _DeleteRegisterState extends State<DeleteRegister> {
   }
 
   void doRegister() {
-    MyApi myApi = MyApi();
     myApi.register(
-        username: usernameController.text,
-        email: emailController.text,
-        password: passwordController.text);
+        // username: usernameController.text,
+        // email: emailController.text,
+        // password: passwordController.text,
+        );
   }
 
   Widget verPassword() {
@@ -143,5 +145,20 @@ class _DeleteRegisterState extends State<DeleteRegister> {
       content: Text(message),
       backgroundColor: color,
     ));
+  }
+
+  Widget example() {
+    return Container(
+      height: 100,
+      width: 100,
+      decoration: BoxDecoration(
+        color: Colors.red,
+        borderRadius: BorderRadius.all(
+          Radius.circular(30),
+        ),
+      ),
+      child: Image(
+          image: NetworkImage('http://192.168.101.9:8000/media/bicicleta.jpg')),
+    );
   }
 }
